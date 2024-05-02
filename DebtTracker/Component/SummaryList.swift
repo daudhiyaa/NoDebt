@@ -8,24 +8,21 @@
 import SwiftUI
 
 struct SummaryList: View {
-    var activityName: String = "Activity Name"
-    var title: String
-    var nominal: String = "Nominal"
-    var personName: String = "Person Name"
+    let summary: SummaryItem
     
     var body: some View {
-        NavigationLink(destination: DetailView()) {
+        NavigationLink(destination: DetailView(summary: summary)) {
             HStack {
                 Image(systemName: "fork.knife.circle")
                     .foregroundColor(.cyan)
                 VStack(alignment: .leading, content: {
-                    Text(activityName).font(.subheadline)
-                    Text(title).font(.system(size: 12))
+                    Text(summary.activityName).font(.subheadline)
+                    Text(summary.category).font(.system(size: 12))
                 })
                 Spacer()
                 VStack(alignment: .trailing, content: {
-                    Text(nominal).font(.callout)
-                    Text(personName).font(.system(size: 12))
+                    Text(formatToIDR(summary.totalNominal)).font(.callout)
+                    Text(summary.groupName).font(.system(size: 12))
                 })
             }
         }.padding(.vertical, 8)

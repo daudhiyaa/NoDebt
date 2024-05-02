@@ -9,7 +9,61 @@ import SwiftUI
 
 struct SummaryView: View {
     var filterTags: [String] = ["Day", "Week", "Month", "Year"]
-    var items = ["Category 1", "Category 2", "Category 3", "Category 4", "Category 5"]
+    
+    let summaries = [
+        Summary(
+            date: Date(),
+            totalNominal: 100000,
+            summaries: [
+                SummaryItem(
+                    activityName: "Activity 1",
+                    category: "Category 1",
+                    totalNominal: 30000.0,
+                    groupName: "Group 1",
+                    persons: [
+                        Person(name: "Person 1", nominal: 10000.0),
+                        Person(name: "Person 2", nominal: 20000.0),
+                    ]
+                ),
+                SummaryItem(
+                    activityName: "Activity 2",
+                    category: "Category 2",
+                    totalNominal: 70000.0,
+                    groupName: "Group 2",
+                    persons: [
+                        Person(name: "Person 3", nominal: 30000.0),
+                        Person(name: "Person 4", nominal: 40000.0),
+                    ]
+                )
+            ]
+        ),
+        Summary(
+            date: Date(),
+            totalNominal: 100000,
+            summaries: [
+                SummaryItem(
+                    activityName: "Activity 1",
+                    category: "Category 1",
+                    totalNominal: 30000.0,
+                    groupName: "Group 1",
+                    persons: [
+                        Person(name: "Person 1", nominal: 10000.0),
+                        Person(name: "Person 2", nominal: 20000.0),
+                    ]
+                ),
+                SummaryItem(
+                    activityName: "Activity 2",
+                    category: "Category 2",
+                    totalNominal: 70000.0,
+                    groupName: "Group 2",
+                    persons: [
+                        Person(name: "Person 3", nominal: 30000.0),
+                        Person(name: "Person 4", nominal: 40000.0),
+                    ]
+                )
+            ]
+        ),
+    ]
     
     @State var inputName: String = ""
     @State var rating:Int = 0
@@ -46,37 +100,43 @@ struct SummaryView: View {
                     }
                 })
                 
+                // SEGMENTED CONTROL => FILTER BY DATE
                 Picker("Filter", selection: $filterBy) {
                     ForEach(filterTags, id: \.self) { tag in
                         Text(tag).tag(tag)
                     }
                 }.pickerStyle(.segmented)
                 
-                ForEach(0..<2) { index in
+                // SECTION SUMMARY
+                ForEach(summaries.indices, id: \.self) {
+                    index in
                     Section {
-                            ForEach(items, id: \.self) { item in
-                                SummaryList(title: item)
-                            }
+                        ForEach(summaries) { summary in
+                            SummaryList(
+                                summary: summary.summaries[index]
+                            )
+                        }
                     } header: {
-                        HStack(content: {
-                            Text("Tanggal")
+                        HStack{
+                            Text("\(formatDate(date: summaries[index].date))")
                             Spacer()
-                            Text("Nominal")
-                        })
+                            Text(formatToIDR(summaries[index].totalNominal))
+                        }
                     }
                 }
-                
             })
             .navigationBarTitle("Summary", displayMode: .automatic)
-            .navigationBarItems(trailing: Button(action: {
-                self.isSheetPresented = true
-            }) {
-                Image(systemName: "plus").foregroundColor(.cyan)
-            }.popover(isPresented: $isSheetPresented) {
-                NavigationView {
-                    FormAddView(isSheetPresented: $isSheetPresented)
+            .navigationBarItems(
+                trailing: Button(action: {
+                    self.isSheetPresented = true
+                }) {
+                    Image(systemName: "plus").foregroundColor(.cyan)
+                }.popover(isPresented: $isSheetPresented) {
+                    NavigationView {
+                        FormAddView(isSheetPresented: $isSheetPresented)
+                    }
                 }
-            })
+            )
         }
     }
 }

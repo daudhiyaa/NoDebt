@@ -8,19 +8,21 @@
 import SwiftUI
 
 struct DetailList: View {
+    let person: Person
+    
     var body: some View {
-        NavigationLink(destination: DetailView()) {
+        NavigationLink(destination: FormUploadPaymentView()) {
             HStack {
                 Image(systemName: "checkmark.circle")
                     .foregroundColor(.cyan)
-                Text("Person Name").font(.callout)
+                Text(person.name).font(.callout)
                 Spacer()
-                Text("Nominal").font(.callout)
+                Text(formatToIDR(person.nominal)).font(.callout)
             }
         }.padding(.vertical, 8)
     }
 }
 
 #Preview {
-    DetailList()
+    DetailList(person: Person(name: "Person Name", nominal: 10000))
 }

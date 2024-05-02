@@ -11,7 +11,7 @@ import Foundation
 struct FormAddView: View {
     @Binding var isSheetPresented: Bool
     
-    let cards = [
+    let categories = [
         Category(title: "Category 1", icon: "person"),
         Category(title: "Category 2", icon: "person"),
         Category(title: "Category 3", icon: "person"),
@@ -27,8 +27,6 @@ struct FormAddView: View {
     @State private var groupName: String = ""
     @State private var friendsName: [String] = [""]
     @State private var nominals: [String] = [""]
-    
-    @State private var numOfFriend: Int = 1
     
     @State private var selectedImage: UIImage?
     @State private var isImagePickerPresented = false
@@ -151,7 +149,7 @@ struct FormAddView: View {
             
             Section {
                 LazyVGrid(columns: Array(repeating: GridItem(), count: 4), spacing: 20) {
-                    ForEach(cards) { card in
+                    ForEach(categories) { card in
                         CategoryCard(card: card)
                     }
                 }.padding(EdgeInsets(
