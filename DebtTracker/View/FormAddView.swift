@@ -21,6 +21,8 @@ struct FormAddView: View {
     ]
     //    @FocusState private var emailFieldIsFocused: Bool = false
     
+    @State private var isCredit = true
+    
     @State private var activityName: String = ""
     @State private var date = Date()
     
@@ -37,20 +39,26 @@ struct FormAddView: View {
             HStack(content: {
                 ZStack {
                     RoundedRectangle(cornerRadius: 10)
-                        .fill(Color.cyan).frame(height: 50)
+                        .fill(isCredit ? Color.teal : Color.gray)
+                        .frame(height: 50)
                     VStack(alignment: .leading, content: {
                         Text("Credit")
                             .foregroundColor(.white)
                     })
+                }.onTapGesture {
+                    isCredit = true
                 }
                 
                 ZStack {
                     RoundedRectangle(cornerRadius: 10)
-                        .fill(Color.red.opacity(0.8)).frame(height: 50)
+                        .fill(isCredit ? Color.gray : Color.red.opacity(0.8))
+                        .frame(height: 50)
                     VStack(alignment: .leading, content: {
                         Text("Debit")
                             .foregroundColor(.white)
                     })
+                }.onTapGesture {
+                    isCredit = false
                 }
             })
             
@@ -85,7 +93,7 @@ struct FormAddView: View {
                             self.isImagePickerPresented.toggle()
                         }
                         .padding()
-                        .background(Color.blue)
+                        .background(Color.teal)
                         .foregroundColor(.white)
                         .cornerRadius(10)
                     }
@@ -142,7 +150,7 @@ struct FormAddView: View {
                         self.nominals.append("")
                     }) {
                         Image(systemName: "plus.circle")
-                            .foregroundColor(.cyan)
+                            .foregroundColor(.teal)
                     }
                 })
             }
@@ -165,7 +173,7 @@ struct FormAddView: View {
                 Text("Done")
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(Color.cyan)
+                    .background(Color.teal)
                     .foregroundColor(.white)
                     .cornerRadius(8) // Add corner radius
             }
@@ -177,7 +185,6 @@ struct FormAddView: View {
                 isSheetPresented = false
             }.foregroundColor(.red)
         )
-        
     }
 }
 

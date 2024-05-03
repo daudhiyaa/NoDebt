@@ -11,12 +11,14 @@ struct FormUploadPaymentView: View {
     @State private var selectedImage: UIImage?
     @State private var isImagePickerPresented = false
     
+    let person: Person
+    
     var body: some View {
         VStack {
             HStack {
-                Text("Person Name")
+                Text(person.name)
                 Spacer()
-                Text("Rp Nominal")
+                Text(formatToIDR(person.nominal))
             }
             if let image = selectedImage {
                 Button(action: {self.isImagePickerPresented.toggle()}) {
@@ -34,25 +36,28 @@ struct FormUploadPaymentView: View {
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 50)
-                        Text("Upload Payment Receipt")
+                            .foregroundColor(.teal)
+                        Text("Upload Payment Receipt").foregroundColor(.teal)
                     }.padding([.vertical, .horizontal], 70)
                 }
                 .padding()
                 .overlay(
                     RoundedRectangle(cornerRadius: 8)
                         .stroke(style: StrokeStyle(lineWidth: 2, dash: [5]))
-                        .foregroundColor(.blue)
+                        .foregroundColor(.teal)
                 )
                 .cornerRadius(9)
             }
-            Button(action: {}) {
+            Button(action: {
+                /// Action
+            }) {
                 Text("Confirm Payment")
                     .padding([.horizontal], 114)
                     .padding([.vertical])
                     .background(
                         selectedImage == nil
                         ? Color.gray.opacity(0.5)
-                        : Color.blue
+                        : Color.teal
                     )
                     .foregroundColor(.white)
                     .cornerRadius(8)
@@ -68,5 +73,5 @@ struct FormUploadPaymentView: View {
 }
 
 #Preview {
-    FormUploadPaymentView()
+    FormUploadPaymentView(person: Person(name: "Person 5", nominal: 30000.0))
 }

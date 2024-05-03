@@ -7,9 +7,8 @@
 
 import Foundation
 
-func formatDate(date: Date) -> String {
+func formatDate(date: Date, dateFormat:String = "EE, d MMMM yy") -> String {
     let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "dd/MM/yyyy" // Define the desired date format
+    dateFormatter.dateFormat = dateFormat
     return dateFormatter.string(from: date)
 }
-

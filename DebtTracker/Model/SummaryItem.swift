@@ -13,5 +13,6 @@ struct SummaryItem: Identifiable {
     let category: String
     let totalNominal: Double
     let groupName: String
+    let isCredit: Bool
     let persons: [Person]
 }

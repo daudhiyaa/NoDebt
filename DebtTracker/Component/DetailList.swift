@@ -11,10 +11,10 @@ struct DetailList: View {
     let person: Person
     
     var body: some View {
-        NavigationLink(destination: FormUploadPaymentView()) {
+        NavigationLink(destination: FormUploadPaymentView(person: person)) {
             HStack {
                 Image(systemName: "checkmark.circle")
-                    .foregroundColor(.cyan)
+                    .foregroundColor(.teal)
                 Text(person.name).font(.callout)
                 Spacer()
                 Text(formatToIDR(person.nominal)).font(.callout)

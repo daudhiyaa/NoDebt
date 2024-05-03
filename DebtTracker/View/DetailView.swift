@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct DetailView: View {
-    var items = ["Category 1", "Category 2", "Category 3", "Category 4", "Category 5"]
     let summary: SummaryItem
+    let date: Date
     
     var body: some View {
         List(content: {
@@ -21,13 +21,17 @@ struct DetailView: View {
                 HStack(content: {
                     VStack(alignment: .leading,content: {
                         Text(summary.groupName)
-                            .font(.title2)
+                            .foregroundColor(.black)
+                            .font(.title3)
                             .fontWeight(.semibold)
-                        Text("\(summary.activityName) - Wed, 24 Apr 24")
+                        Text("\(summary.activityName) - \(formatDate(date: date))")
+                            .foregroundColor(.black)
                             .font(.caption2)
                     })
                     Spacer()
                     Text(formatToIDR(summary.totalNominal))
+                        .font(.body)
+                        .foregroundColor(summary.isCredit ? Color.teal : Color.red)
                 })
             }
         }).navigationBarTitle("Detail", displayMode: .inline)
@@ -42,11 +46,13 @@ struct DetailView: View {
                 category: "Category 1",
                 totalNominal: 70000.0,
                 groupName: "Group 1",
+                isCredit: false,
                 persons: [
                     Person(name: "Person 3", nominal: 30000.0),
                     Person(name: "Person 4", nominal: 40000.0),
                 ]
             )
-        )
+        ),
+        date: Date()
     )
 }
