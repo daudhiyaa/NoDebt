@@ -44,7 +44,7 @@ struct DetailView: View {
         summary: (
             SummaryItem(
                 activityName: "Activity 1",
-                category: "Category 1",
+                category: Category(title: "Makan-makan", icon: "fork.knife.circle"),
                 totalNominal: 70000.0,
                 groupName: "Group 1",
                 isCredit: false,

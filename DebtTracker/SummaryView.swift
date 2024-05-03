@@ -17,7 +17,7 @@ struct SummaryView: View {
             summaries: [
                 SummaryItem(
                     activityName: "Activity 1",
-                    category: "Category 1",
+                    category: Category(title: "Makan-makan", icon: "fork.knife.circle"),
                     totalNominal: 30000.0,
                     groupName: "Group 1",
                     isCredit: true,
@@ -28,7 +28,7 @@ struct SummaryView: View {
                 ),
                 SummaryItem(
                     activityName: "Activity 2",
-                    category: "Category 2",
+                    category: Category(title: "Vacation", icon: "beach.umbrella"),
                     totalNominal: 70000.0,
                     groupName: "Group 2",
                     isCredit: false,
@@ -39,7 +39,7 @@ struct SummaryView: View {
                 ),
                 SummaryItem(
                     activityName: "Activity 3",
-                    category: "Category 3",
+                    category: Category(title: "Makan-makan", icon: "fork.knife.circle"),
                     totalNominal: 140000.0,
                     groupName: "Group 3",
                     isCredit: true,
@@ -58,7 +58,7 @@ struct SummaryView: View {
             summaries: [
                 SummaryItem(
                     activityName: "Activity 1",
-                    category: "Category 1",
+                    category: Category(title: "Makan-makan", icon: "fork.knife.circle"),
                     totalNominal: 30000.0,
                     groupName: "Group 4",
                     isCredit: false,
@@ -69,7 +69,7 @@ struct SummaryView: View {
                 ),
                 SummaryItem(
                     activityName: "Activity 2",
-                    category: "Category 2",
+                    category: Category(title: "Vacation", icon: "beach.umbrella"),
                     totalNominal: 70000.0,
                     groupName: "Group 5",
                     isCredit: true,

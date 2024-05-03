@@ -15,11 +15,11 @@ struct SummaryList: View {
     var body: some View {
         NavigationLink(destination: DetailView(summary: summary, date: date, isCredit: isCredit)) {
             HStack {
-                Image(systemName: "fork.knife.circle")
+                Image(systemName: summary.category.icon)
                     .foregroundColor(.teal)
                 VStack(alignment: .leading, content: {
                     Text(summary.activityName).font(.subheadline)
-                    Text(summary.category).font(.system(size: 12))
+                    Text(summary.category.title).font(.system(size: 12))
                 })
                 Spacer()
                 VStack(alignment: .trailing, content: {

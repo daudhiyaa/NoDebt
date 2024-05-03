@@ -10,7 +10,7 @@ import SwiftUI
 struct SummaryItem: Identifiable {
     let id = UUID()
     let activityName: String
-    let category: String
+    let category: Category
     let totalNominal: Double
     let groupName: String
     let isCredit: Bool
