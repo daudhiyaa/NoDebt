@@ -10,9 +10,10 @@ import SwiftUI
 struct SummaryList: View {
     let summary: SummaryItem
     let date: Date
+    let isCredit: Bool
     
     var body: some View {
-        NavigationLink(destination: DetailView(summary: summary, date: date)) {
+        NavigationLink(destination: DetailView(summary: summary, date: date, isCredit: isCredit)) {
             HStack {
                 Image(systemName: "fork.knife.circle")
                     .foregroundColor(.teal)

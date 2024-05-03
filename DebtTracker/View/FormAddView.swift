@@ -12,12 +12,12 @@ struct FormAddView: View {
     @Binding var isSheetPresented: Bool
     
     let categories = [
-        Category(title: "Category 1", icon: "person"),
-        Category(title: "Category 2", icon: "person"),
-        Category(title: "Category 3", icon: "person"),
-        Category(title: "Category 4", icon: "person"),
-        Category(title: "Category 5", icon: "person"),
-        Category(title: "Category 6", icon: "person"),
+        Category(title: "Cate 1", icon: "person"),
+        Category(title: "Cate 2", icon: "person"),
+        Category(title: "Cate 3", icon: "person"),
+        Category(title: "Cate 4", icon: "person"),
+        Category(title: "Cate 5", icon: "person"),
+        Category(title: "Cate 6", icon: "person"),
     ]
     //    @FocusState private var emailFieldIsFocused: Bool = false
     
@@ -120,26 +120,31 @@ struct FormAddView: View {
             
             Section {
                 ForEach(Array(zip(friendsName.indices, nominals.indices)) , id: \.0) { friendIndex, nominalIndex in
-                    HStack (
-                        alignment: .lastTextBaseline,
-                        content: {
-                            HStack {
-                                Image(systemName: "person")
-                                TextField(
-                                    "Person Name",
-                                    text: self.$friendsName[friendIndex]
-                                )
+                        HStack (
+                            alignment: .lastTextBaseline,
+                            content: {
+                                HStack {
+                                    Image(systemName: "person")
+                                    TextField(
+                                        "Person Name",
+                                        text: self.$friendsName[friendIndex]
+                                    )
+                                }
+                                Spacer()
+                                HStack {
+                                    Image(systemName: "dollarsign.circle")
+                                    TextField(
+                                        "Nominal",
+                                        text: self.$nominals[nominalIndex]
+                                    ).keyboardType(.decimalPad)
+                                }
                             }
-                            Spacer()
-                            HStack {
-                                Image(systemName: "dollarsign.circle")
-                                TextField(
-                                    "Nominal",
-                                    text: self.$nominals[nominalIndex]
-                                ).keyboardType(.decimalPad)
-                            }
-                        }
-                    )
+                        )
+                }.onDelete{ indexSet in
+                    for index in indexSet {
+                        self.friendsName.remove(at: index)
+                        self.nominals.remove(at: index)
+                    }
                 }
             } header: {
                 HStack(content: {
@@ -164,7 +169,16 @@ struct FormAddView: View {
                     top: 10, leading: 0, bottom: 10, trailing: 0
                 ))
             } header: {
-                Text("Categories")
+                HStack(content: {
+                    Text("Categories")
+                    Spacer()
+                    Button(action: {
+                        //
+                    }) {
+                        Image(systemName: "plus.circle")
+                            .foregroundColor(.teal)
+                    }
+                })
             }
             
             Button(action: {

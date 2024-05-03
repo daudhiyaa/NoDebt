@@ -22,8 +22,8 @@ struct SummaryView: View {
                     groupName: "Group 1",
                     isCredit: true,
                     persons: [
-                        Person(name: "Person 1", nominal: 10000.0),
-                        Person(name: "Person 2", nominal: 20000.0),
+                        Person(name: "Person 1", nominal: 10000.0, isPaid: false),
+                        Person(name: "Person 2", nominal: 20000.0, isPaid: true),
                     ]
                 ),
                 SummaryItem(
@@ -33,8 +33,8 @@ struct SummaryView: View {
                     groupName: "Group 2",
                     isCredit: false,
                     persons: [
-                        Person(name: "Person 3", nominal: 30000.0),
-                        Person(name: "Person 4", nominal: 40000.0),
+                        Person(name: "Person 3", nominal: 30000.0, isPaid: false),
+                        Person(name: "Person 4", nominal: 40000.0, isPaid: false),
                     ]
                 ),
                 SummaryItem(
@@ -44,10 +44,10 @@ struct SummaryView: View {
                     groupName: "Group 3",
                     isCredit: true,
                     persons: [
-                        Person(name: "Person 5", nominal: 30000.0),
-                        Person(name: "Person 6", nominal: 40000.0),
-                        Person(name: "Person 5", nominal: 30000.0),
-                        Person(name: "Person 6", nominal: 40000.0),
+                        Person(name: "Person 5", nominal: 30000.0, isPaid: true),
+                        Person(name: "Person 6", nominal: 40000.0, isPaid: false),
+                        Person(name: "Person 5", nominal: 30000.0, isPaid: true),
+                        Person(name: "Person 6", nominal: 40000.0, isPaid: true),
                     ]
                 )
             ]
@@ -63,8 +63,8 @@ struct SummaryView: View {
                     groupName: "Group 4",
                     isCredit: false,
                     persons: [
-                        Person(name: "Person 1", nominal: 10000.0),
-                        Person(name: "Person 2", nominal: 20000.0),
+                        Person(name: "Person 1", nominal: 10000.0, isPaid: false),
+                        Person(name: "Person 2", nominal: 20000.0, isPaid: true),
                     ]
                 ),
                 SummaryItem(
@@ -72,9 +72,9 @@ struct SummaryView: View {
                     category: "Category 2",
                     totalNominal: 70000.0,
                     groupName: "Group 5",
-                    isCredit: false,
+                    isCredit: true,
                     persons: [
-                        Person(name: "Person 3", nominal: 30000.0),
+                        Person(name: "Person 3", nominal: 30000.0, isPaid: false),
                     ]
                 )
             ]
@@ -132,7 +132,8 @@ struct SummaryView: View {
                         ForEach(summary.summaries) { s in
                             SummaryList(
                                 summary: s,
-                                date: summary.date
+                                date: summary.date,
+                                isCredit: s.isCredit
                             )
                         }
                     } header: {

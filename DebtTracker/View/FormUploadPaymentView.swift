@@ -73,5 +73,11 @@ struct FormUploadPaymentView: View {
 }
 
 #Preview {
-    FormUploadPaymentView(person: Person(name: "Person 5", nominal: 30000.0))
+    FormUploadPaymentView(
+        person: Person(
+            name: "Person 5",
+            nominal: 30000.0,
+            isPaid: false
+        )
+    )
 }

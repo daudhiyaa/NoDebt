@@ -10,12 +10,13 @@ import SwiftUI
 struct DetailView: View {
     let summary: SummaryItem
     let date: Date
+    let isCredit: Bool
     
     var body: some View {
         List(content: {
             Section {
                 ForEach(summary.persons.indices, id: \.self) { index in
-                    DetailList(person: summary.persons[index])
+                    DetailList(person: summary.persons[index], isCredit: isCredit)
                 }
             } header: {
                 HStack(content: {
@@ -48,11 +49,12 @@ struct DetailView: View {
                 groupName: "Group 1",
                 isCredit: false,
                 persons: [
-                    Person(name: "Person 3", nominal: 30000.0),
-                    Person(name: "Person 4", nominal: 40000.0),
+                    Person(name: "Person 3", nominal: 30000.0, isPaid: false),
+                    Person(name: "Person 4", nominal: 40000.0, isPaid: true),
                 ]
             )
         ),
-        date: Date()
+        date: Date(),
+        isCredit: false
     )
 }
