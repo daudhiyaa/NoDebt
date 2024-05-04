@@ -7,79 +7,79 @@
 
 import SwiftUI
 
+let summariesData = [
+    Summary(
+        date: Date(),
+        totalNominal: 100000,
+        summaries: [
+            SummaryItem(
+                activityName: "Activity 1",
+                category: Category(title: "Makan-makan", icon: "fork.knife.circle"),
+                totalNominal: 30000.0,
+                groupName: "Group 1",
+                isCredit: true,
+                persons: [
+                    Person(name: "Person 1", nominal: 10000.0, isPaid: false),
+                    Person(name: "Person 2", nominal: 20000.0, isPaid: true),
+                ]
+            ),
+            SummaryItem(
+                activityName: "Activity 2",
+                category: Category(title: "Vacation", icon: "beach.umbrella"),
+                totalNominal: 70000.0,
+                groupName: "Group 2",
+                isCredit: false,
+                persons: [
+                    Person(name: "Person 3", nominal: 30000.0, isPaid: false),
+                    Person(name: "Person 4", nominal: 40000.0, isPaid: false),
+                ]
+            ),
+            SummaryItem(
+                activityName: "Activity 3",
+                category: Category(title: "Makan-makan", icon: "fork.knife.circle"),
+                totalNominal: 140000.0,
+                groupName: "Group 3",
+                isCredit: true,
+                persons: [
+                    Person(name: "Person 5", nominal: 30000.0, isPaid: true),
+                    Person(name: "Person 6", nominal: 40000.0, isPaid: false),
+                    Person(name: "Person 5", nominal: 30000.0, isPaid: true),
+                    Person(name: "Person 6", nominal: 40000.0, isPaid: true),
+                ]
+            )
+        ]
+    ),
+    Summary(
+        date: Calendar.current.date(byAdding: .day, value: -1, to: Date())!,
+        totalNominal: 100000,
+        summaries: [
+            SummaryItem(
+                activityName: "Activity 1",
+                category: Category(title: "Makan-makan", icon: "fork.knife.circle"),
+                totalNominal: 30000.0,
+                groupName: "Group 4",
+                isCredit: false,
+                persons: [
+                    Person(name: "Person 1", nominal: 10000.0, isPaid: false),
+                    Person(name: "Person 2", nominal: 20000.0, isPaid: true),
+                ]
+            ),
+            SummaryItem(
+                activityName: "Activity 2",
+                category: Category(title: "Vacation", icon: "beach.umbrella"),
+                totalNominal: 70000.0,
+                groupName: "Group 5",
+                isCredit: true,
+                persons: [
+                    Person(name: "Person 3", nominal: 30000.0, isPaid: false),
+                ]
+            )
+        ]
+    ),
+]
+
 struct SummaryView: View {
     let filterTags: [String] = ["Day", "Week", "Month", "Year"]
-    
-    let summariesData = [
-        Summary(
-            date: Date(),
-            totalNominal: 100000,
-            summaries: [
-                SummaryItem(
-                    activityName: "Activity 1",
-                    category: Category(title: "Makan-makan", icon: "fork.knife.circle"),
-                    totalNominal: 30000.0,
-                    groupName: "Group 1",
-                    isCredit: true,
-                    persons: [
-                        Person(name: "Person 1", nominal: 10000.0, isPaid: false),
-                        Person(name: "Person 2", nominal: 20000.0, isPaid: true),
-                    ]
-                ),
-                SummaryItem(
-                    activityName: "Activity 2",
-                    category: Category(title: "Vacation", icon: "beach.umbrella"),
-                    totalNominal: 70000.0,
-                    groupName: "Group 2",
-                    isCredit: false,
-                    persons: [
-                        Person(name: "Person 3", nominal: 30000.0, isPaid: false),
-                        Person(name: "Person 4", nominal: 40000.0, isPaid: false),
-                    ]
-                ),
-                SummaryItem(
-                    activityName: "Activity 3",
-                    category: Category(title: "Makan-makan", icon: "fork.knife.circle"),
-                    totalNominal: 140000.0,
-                    groupName: "Group 3",
-                    isCredit: true,
-                    persons: [
-                        Person(name: "Person 5", nominal: 30000.0, isPaid: true),
-                        Person(name: "Person 6", nominal: 40000.0, isPaid: false),
-                        Person(name: "Person 5", nominal: 30000.0, isPaid: true),
-                        Person(name: "Person 6", nominal: 40000.0, isPaid: true),
-                    ]
-                )
-            ]
-        ),
-        Summary(
-            date: Calendar.current.date(byAdding: .day, value: -1, to: Date())!,
-            totalNominal: 100000,
-            summaries: [
-                SummaryItem(
-                    activityName: "Activity 1",
-                    category: Category(title: "Makan-makan", icon: "fork.knife.circle"),
-                    totalNominal: 30000.0,
-                    groupName: "Group 4",
-                    isCredit: false,
-                    persons: [
-                        Person(name: "Person 1", nominal: 10000.0, isPaid: false),
-                        Person(name: "Person 2", nominal: 20000.0, isPaid: true),
-                    ]
-                ),
-                SummaryItem(
-                    activityName: "Activity 2",
-                    category: Category(title: "Vacation", icon: "beach.umbrella"),
-                    totalNominal: 70000.0,
-                    groupName: "Group 5",
-                    isCredit: true,
-                    persons: [
-                        Person(name: "Person 3", nominal: 30000.0, isPaid: false),
-                    ]
-                )
-            ]
-        ),
-    ]
     
     @State private var filterBy: String = "Day"
     @State private var isSheetPresented = false
@@ -138,9 +138,11 @@ struct SummaryView: View {
                         }
                     } header: {
                         HStack{
-                            Text("\(formatDate(date: summary.date))").font(.body).foregroundColor(.black)
+                            Text("\(formatDate(date: summary.date))")
+                                .font(.body).foregroundStyle(.black)
                             Spacer()
-                            Text(formatToIDR(summary.totalNominal)).textCase(.none).font(.body).foregroundColor(.black)
+                            Text(formatToIDR(summary.totalNominal))
+                                .textCase(.none).font(.body).foregroundStyle(.black)
                         }
                     }
                 }

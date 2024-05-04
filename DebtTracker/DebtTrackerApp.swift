@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct DebtTrackerApp: App {
@@ -13,5 +14,6 @@ struct DebtTrackerApp: App {
         WindowGroup {
             SummaryView()
         }
+        .modelContainer(for: Category.self)
     }
 }

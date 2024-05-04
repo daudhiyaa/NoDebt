@@ -6,20 +6,14 @@
 //
 
 import SwiftUI
-import Foundation
+import SwiftData
 
 struct FormAddView: View {
     @Binding var isSheetPresented: Bool
+    @State var isSheetAddCategoryPresented: Bool = false
     
-    let categories = [
-        Category(title: "Cate 1", icon: "person"),
-        Category(title: "Cate 2", icon: "person"),
-        Category(title: "Cate 3", icon: "person"),
-        Category(title: "Cate 4", icon: "person"),
-        Category(title: "Cate 5", icon: "person"),
-        Category(title: "Cate 6", icon: "person"),
-    ]
-    //    @FocusState private var emailFieldIsFocused: Bool = false
+    @Query private var categories: [Category]
+    @State private var selectedCategory: Category = Category(title: "Makan", icon: "fork.knife.circle")
     
     @State private var isCredit = true
     
@@ -161,22 +155,35 @@ struct FormAddView: View {
             }
             
             Section {
-                LazyVGrid(columns: Array(repeating: GridItem(), count: 4), spacing: 20) {
-                    ForEach(categories) { card in
-                        CategoryCard(card: card)
+                Picker("Category", selection: $selectedCategory) {
+                    ForEach(categories, id: \.self) { tag in
+                        HStack {
+                            Text(tag.title)
+                            Image(systemName: tag.icon)
+                        }.tag(tag)
                     }
-                }.padding(EdgeInsets(
-                    top: 10, leading: 0, bottom: 10, trailing: 0
-                ))
+                }.pickerStyle(.menu)
+//                LazyVGrid(columns: Array(repeating: GridItem(), count: 4), spacing: 20) {
+//                    ForEach(categories) { card in
+//                        CategoryCard(card: card)
+//                    }
+//                }.padding(EdgeInsets(
+//                    top: 10, leading: 0, bottom: 10, trailing: 0
+//                ))
             } header: {
                 HStack(content: {
                     Text("Categories")
                     Spacer()
                     Button(action: {
-                        //
+                        isSheetAddCategoryPresented = true
                     }) {
-                        Image(systemName: "plus.circle")
-                            .foregroundColor(.teal)
+                        Image(systemName: "plus.circle").foregroundColor(.teal)
+                    }.popover(isPresented: $isSheetAddCategoryPresented) {
+                        NavigationView {
+                            FormAddCategoryView(
+                                isSheetAddCategoryPresented: $isSheetAddCategoryPresented
+                            )
+                        }
                     }
                 })
             }
