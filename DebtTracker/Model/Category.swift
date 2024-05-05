@@ -6,11 +6,10 @@
 //
 
 import Foundation
-import SwiftUI
 import SwiftData
 
 @Model
-class Category: Identifiable {
+class CategoryActivity: Identifiable {
     var id: String
     var title: String
     var icon: String

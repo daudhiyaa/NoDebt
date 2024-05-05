@@ -26,7 +26,7 @@ struct FormUploadPaymentView: View {
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .cornerRadius(10)
-                        .frame(width: .infinity)
+                        .frame(width: .infinity, height: 150)
                 }
             }
             else {

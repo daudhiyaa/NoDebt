@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-struct CategoryCard: View {
-    let card: Category
+struct CategoryActivityCard: View {
+    let card: CategoryActivity
     
     var body: some View {
         VStack {

@@ -6,10 +6,19 @@
 //
 
 import Foundation
+import SwiftData
 
-struct Summary: Identifiable {
-    let id = UUID()
-    let date: Date
-    let totalNominal: Double
-    let summaries: [SummaryItem]
+@Model
+class Summary: Identifiable {
+    var id: String
+    var date: Date
+    var totalNominal: Double
+    var summaries: [SummaryItem]
+    
+    init(date: Date, totalNominal: Double, summaries: [SummaryItem]) {
+        self.id = UUID().uuidString
+        self.date = date
+        self.totalNominal = totalNominal
+        self.summaries = summaries
+    }
 }

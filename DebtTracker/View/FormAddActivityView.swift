@@ -8,12 +8,15 @@
 import SwiftUI
 import SwiftData
 
-struct FormAddView: View {
-    @Binding var isSheetPresented: Bool
-    @State var isSheetAddCategoryPresented: Bool = false
+struct FormAddActivityView: View {
+    @Environment(\.modelContext) private var context
     
-    @Query private var categories: [Category]
-    @State private var selectedCategory: Category = Category(title: "Makan", icon: "fork.knife.circle")
+    @Binding var isSheetPresented: Bool
+    @State var isSheetAddCategoryActivityPresented: Bool = false
+    
+    @Query private var summaries: [Summary]
+    @Query private var categories: [CategoryActivity]
+    @State private var selectedCategoryActivity: CategoryActivity = CategoryActivity(title: "Kuliner", icon: "fork.knife.circle")
     
     @State private var isCredit = true
     
@@ -96,7 +99,7 @@ struct FormAddView: View {
                     ImagePicker(selectedImage: self.$selectedImage)
                 }
                 
-            }.textInputAutocapitalization(.never).disableAutocorrection(true)
+            }
             
             Section {
                 HStack {
@@ -155,33 +158,26 @@ struct FormAddView: View {
             }
             
             Section {
-                Picker("Category", selection: $selectedCategory) {
-                    ForEach(categories, id: \.self) { tag in
+                Picker("CategoryActivity", selection: $selectedCategoryActivity) {
+                    ForEach(categories) { category in
                         HStack {
-                            Text(tag.title)
-                            Image(systemName: tag.icon)
-                        }.tag(tag)
+                            Text(category.title)
+                            Image(systemName: category.icon)
+                        }.tag(category)
                     }
                 }.pickerStyle(.menu)
-//                LazyVGrid(columns: Array(repeating: GridItem(), count: 4), spacing: 20) {
-//                    ForEach(categories) { card in
-//                        CategoryCard(card: card)
-//                    }
-//                }.padding(EdgeInsets(
-//                    top: 10, leading: 0, bottom: 10, trailing: 0
-//                ))
             } header: {
                 HStack(content: {
                     Text("Categories")
                     Spacer()
                     Button(action: {
-                        isSheetAddCategoryPresented = true
+                        isSheetAddCategoryActivityPresented = true
                     }) {
                         Image(systemName: "plus.circle").foregroundColor(.teal)
-                    }.popover(isPresented: $isSheetAddCategoryPresented) {
+                    }.popover(isPresented: $isSheetAddCategoryActivityPresented) {
                         NavigationView {
-                            FormAddCategoryView(
-                                isSheetAddCategoryPresented: $isSheetAddCategoryPresented
+                            FormAddCategoryActivityView(
+                                isSheetAddCategoryActivityPresented: $isSheetAddCategoryActivityPresented
                             )
                         }
                     }
@@ -189,7 +185,60 @@ struct FormAddView: View {
             }
             
             Button(action: {
-                // print("Button tapped")
+                var listOfPersons: [Person] = []
+                var totalNominal: Double = 0.0
+                
+                for (friend, nominal) in zip(friendsName, nominals) {
+                    listOfPersons.append(
+                        Person(
+                            name: friend,
+                            nominal: Double(nominal)!,
+                            isPaid: false
+                        )
+                    )
+                    
+                    totalNominal += Double(nominal)!
+                }
+                
+                if !isCredit {
+                    totalNominal *= -1
+                }
+                
+                let newSummaryItem = SummaryItem(
+                    activityName: activityName,
+                    category: CategoryActivity(
+                        title: selectedCategoryActivity.title,
+                        icon: selectedCategoryActivity.icon
+                    ),
+                    totalNominal: totalNominal,
+                    groupName: groupName,
+                    isCredit: isCredit,
+                    persons: listOfPersons
+                )
+                
+                var isFound = false
+                for summary in summaries {
+                    if formatDate(date: date) == formatDate(date: summary.date) {
+                        isFound = true
+                        summary.totalNominal += newSummaryItem.totalNominal
+                        summary.summaries.append(newSummaryItem)
+                    }
+                }
+                print(isFound)
+                
+                if !isFound {
+                    context.insert(
+                        Summary(
+                            date: date, 
+                            totalNominal: newSummaryItem.totalNominal,
+                            summaries: [newSummaryItem]
+                        )
+                    )
+                } else {
+                    try? context.save()
+                }
+                
+                isSheetPresented = false
             }) {
                 Text("Done")
                     .frame(maxWidth: .infinity)
@@ -200,6 +249,7 @@ struct FormAddView: View {
             }
             .buttonStyle(PlainButtonStyle())
         }
+        .textInputAutocapitalization(.never).disableAutocorrection(true)
         .navigationBarTitle("New Note", displayMode: .inline)
         .navigationBarItems(
             trailing:Button("Cancel"){
@@ -210,5 +260,5 @@ struct FormAddView: View {
 }
 
 #Preview {
-    FormAddView(isSheetPresented: .constant(false))
+    FormAddActivityView(isSheetPresented: .constant(false))
 }
