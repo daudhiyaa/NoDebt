@@ -8,85 +8,22 @@
 import SwiftUI
 import SwiftData
 
-let summariesData: [Summary] = [
-    //    Summary(
-    //        date: Date(),
-    //        totalNominal: 100000,
-    //        summaries: [
-    //            SummaryItem(
-    //                activityName: "Activity 1",
-    //                category: CategoryActivity(title: "Makan-makan", icon: "fork.knife.circle"),
-    //                totalNominal: 30000.0,
-    //                groupName: "Group 1",
-    //                isCredit: true,
-    //                persons: [
-    //                    Person(name: "Person 1", nominal: 10000.0, isPaid: false),
-    //                    Person(name: "Person 2", nominal: 20000.0, isPaid: true),
-    //                ]
-    //            ),
-    //            SummaryItem(
-    //                activityName: "Activity 2",
-    //                category: CategoryActivity(title: "Vacation", icon: "beach.umbrella"),
-    //                totalNominal: 70000.0,
-    //                groupName: "Group 2",
-    //                isCredit: false,
-    //                persons: [
-    //                    Person(name: "Person 3", nominal: 30000.0, isPaid: false),
-    //                    Person(name: "Person 4", nominal: 40000.0, isPaid: false),
-    //                ]
-    //            ),
-    //            SummaryItem(
-    //                activityName: "Activity 3",
-    //                category: CategoryActivity(title: "Makan-makan", icon: "fork.knife.circle"),
-    //                totalNominal: 140000.0,
-    //                groupName: "Group 3",
-    //                isCredit: true,
-    //                persons: [
-    //                    Person(name: "Person 5", nominal: 30000.0, isPaid: true),
-    //                    Person(name: "Person 6", nominal: 40000.0, isPaid: false),
-    //                    Person(name: "Person 5", nominal: 30000.0, isPaid: true),
-    //                    Person(name: "Person 6", nominal: 40000.0, isPaid: true),
-    //                ]
-    //            )
-    //        ]
-    //    ),
-    //    Summary(
-    //        date: Calendar.current.date(byAdding: .day, value: -1, to: Date())!,
-    //        totalNominal: 100000,
-    //        summaries: [
-    //            SummaryItem(
-    //                activityName: "Activity 1",
-    //                category: CategoryActivity(title: "Makan-makan", icon: "fork.knife.circle"),
-    //                totalNominal: 30000.0,
-    //                groupName: "Group 4",
-    //                isCredit: false,
-    //                persons: [
-    //                    Person(name: "Person 1", nominal: 10000.0, isPaid: false),
-    //                    Person(name: "Person 2", nominal: 20000.0, isPaid: true),
-    //                ]
-    //            ),
-    //            SummaryItem(
-    //                activityName: "Activity 2",
-    //                category: CategoryActivity(title: "Vacation", icon: "beach.umbrella"),
-    //                totalNominal: 70000.0,
-    //                groupName: "Group 5",
-    //                isCredit: true,
-    //                persons: [
-    //                    Person(name: "Person 3", nominal: 30000.0, isPaid: false),
-    //                ]
-    //            )
-    //        ]
-    //    ),
-]
+let filterTags: [String] = ["Day", "Week", "Month", "Year"]
 
 struct SummaryView: View {
-    let filterTags: [String] = ["Day", "Week", "Month", "Year"]
-    
     @Query private var summaries: [Summary]
     
     @State private var filterBy: String = "Day"
     @State private var isSheetPresented = false
     @State private var isCredit = true
+    @State private var filteredSummaries: [Summary]
+    
+    init(filterBy: String = "Day", isSheetPresented: Bool = false, isCredit: Bool = true) {
+        self.filterBy = filterBy
+        self.isSheetPresented = isSheetPresented
+        self.isCredit = isCredit
+        self.filteredSummaries = []
+    }
     
     var body: some View {
         NavigationStack {
@@ -127,10 +64,16 @@ struct SummaryView: View {
                     ForEach(filterTags, id: \.self) { tag in
                         Text(tag).tag(tag)
                     }
-                }.pickerStyle(.segmented)
+                }
+                .pickerStyle(.segmented)
+                .onChange(of: filterBy, { oldValue, newValue in
+                    filteredSummaries = filterSummaries(
+                        summaries, by: filterBy
+                    )
+                })
                 
                 // SECTION SUMMARY
-                ForEach(summaries) { summary in
+                ForEach(filteredSummaries == [] ? summaries : filteredSummaries) { summary in
                     Section {
                         ForEach(summary.summaries) { s in
                             SummaryList(
@@ -162,6 +105,30 @@ struct SummaryView: View {
                     }
                 }
             )
+        }
+    }
+    
+    func filterSummaries(_ summaries: [Summary], by filter: String) -> [Summary] {
+        let currentDate = Date()
+        let calendar = Calendar.current
+        
+        switch filter {
+        case "Day":
+            return summaries.filter { calendar.isDate($0.date, inSameDayAs: currentDate) }
+        case "Week":
+            let startOfWeek = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: currentDate))!
+            let endOfWeek = calendar.date(byAdding: .day, value: 7, to: startOfWeek)!
+            return summaries.filter { calendar.isDate($0.date, equalTo: startOfWeek, toGranularity: .weekOfYear) }
+        case "Month":
+            let startOfMonth = calendar.date(from: calendar.dateComponents([.year, .month], from: currentDate))!
+            let endOfMonth = calendar.date(byAdding: DateComponents(month: 1, day: -1), to: startOfMonth)!
+            return summaries.filter { calendar.isDate($0.date, equalTo: startOfMonth, toGranularity: .month) }
+        case "Year":
+            let startOfYear = calendar.date(from: calendar.dateComponents([.year], from: currentDate))!
+            let endOfYear = calendar.date(byAdding: DateComponents(year: 1, day: -1), to: startOfYear)!
+            return summaries.filter { calendar.isDate($0.date, equalTo: startOfYear, toGranularity: .year) }
+        default:
+            return summaries.filter { calendar.isDate($0.date, inSameDayAs: currentDate) }
         }
     }
 }

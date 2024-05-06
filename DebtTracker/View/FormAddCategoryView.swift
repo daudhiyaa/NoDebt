@@ -28,7 +28,7 @@ struct FormAddCategoryActivityView: View {
     
     var body: some View {
         Form {
-            TextField("CategoryActivity Name", text: $categoryName).font(.body)
+            TextField("Category Name", text: $categoryName).font(.body)
                 .textInputAutocapitalization(.never).disableAutocorrection(true)
             Picker("Choose Icon", selection: $categoryIcon) {
                 ForEach(categoriesIcon, id: \.self) { tag in
@@ -57,7 +57,7 @@ struct FormAddCategoryActivityView: View {
                 }
             }
         }
-        .navigationBarTitle("New CategoryActivity", displayMode: .inline)
+        .navigationBarTitle("New Category", displayMode: .inline)
         .navigationBarItems(
             trailing:Button("Cancel"){
                 isSheetAddCategoryActivityPresented = false
@@ -66,7 +66,9 @@ struct FormAddCategoryActivityView: View {
     }
     
     func insertCategoryActivity(title: String, icon: String) {
-        let category = CategoryActivity(title: categoryName, icon: categoryIcon)
+        let category = CategoryActivity(
+            title: categoryName, icon: categoryIcon
+        )
         context.insert(category)
         isSheetAddCategoryActivityPresented = false
     }

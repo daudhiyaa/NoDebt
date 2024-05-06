@@ -158,7 +158,7 @@ struct FormAddActivityView: View {
             }
             
             Section {
-                Picker("CategoryActivity", selection: $selectedCategoryActivity) {
+                Picker("Choose Category", selection: $selectedCategoryActivity) {
                     ForEach(categories) { category in
                         HStack {
                             Text(category.title)
@@ -168,7 +168,7 @@ struct FormAddActivityView: View {
                 }.pickerStyle(.menu)
             } header: {
                 HStack(content: {
-                    Text("Categories")
+                    Text("Category")
                     Spacer()
                     Button(action: {
                         isSheetAddCategoryActivityPresented = true
@@ -219,12 +219,14 @@ struct FormAddActivityView: View {
                 var isFound = false
                 for summary in summaries {
                     if formatDate(date: date) == formatDate(date: summary.date) {
-                        isFound = true
                         summary.totalNominal += newSummaryItem.totalNominal
                         summary.summaries.append(newSummaryItem)
+                        
+                        isFound = true
+                        try? context.save()
+                        break
                     }
                 }
-                print(isFound)
                 
                 if !isFound {
                     context.insert(
@@ -234,8 +236,6 @@ struct FormAddActivityView: View {
                             summaries: [newSummaryItem]
                         )
                     )
-                } else {
-                    try? context.save()
                 }
                 
                 isSheetPresented = false
