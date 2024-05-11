@@ -39,7 +39,7 @@ struct FormAddActivityView: View {
                         .fill(isCredit ? Color.teal : Color.gray)
                         .frame(height: 50)
                     VStack(alignment: .leading, content: {
-                        Text("Credit")
+                        Text("Piutang")
                             .foregroundColor(.white)
                     })
                 }.onTapGesture {
@@ -51,7 +51,7 @@ struct FormAddActivityView: View {
                         .fill(isCredit ? Color.gray : Color.red.opacity(0.8))
                         .frame(height: 50)
                     VStack(alignment: .leading, content: {
-                        Text("Debit")
+                        Text("Hutang")
                             .foregroundColor(.white)
                     })
                 }.onTapGesture {
@@ -81,18 +81,33 @@ struct FormAddActivityView: View {
                 
                 VStack {
                     if let image = selectedImage {
-                        Image(uiImage: image)
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 200, height: 200)
+                        Button(action: {self.isImagePickerPresented.toggle()}){
+                            Image(uiImage: image)
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .cornerRadius(9)
+                                .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/)
+                        }
                     } else {
-                        Button("Select Image") {
-                            self.isImagePickerPresented.toggle()
+                        Button(action: {self.isImagePickerPresented.toggle()}) {
+                            HStack(alignment: .center) {
+                                Image(systemName: "photo.badge.plus")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: 25)
+                                    .foregroundColor(.teal)
+                                Text("Upload Payment Receipt")
+                                    .foregroundColor(.teal)
+                                    .frame(maxWidth: .infinity)
+                            }
                         }
                         .padding()
-                        .background(Color.teal)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(style: StrokeStyle(lineWidth: 2, dash: [5]))
+                                .foregroundColor(.teal)
+                        )
+                        .cornerRadius(9)
                     }
                 }
                 .sheet(isPresented: $isImagePickerPresented) {
@@ -117,26 +132,26 @@ struct FormAddActivityView: View {
             
             Section {
                 ForEach(Array(zip(friendsName.indices, nominals.indices)) , id: \.0) { friendIndex, nominalIndex in
-                        HStack (
-                            alignment: .lastTextBaseline,
-                            content: {
-                                HStack {
-                                    Image(systemName: "person")
-                                    TextField(
-                                        "Person Name",
-                                        text: self.$friendsName[friendIndex]
-                                    )
-                                }
-                                Spacer()
-                                HStack {
-                                    Image(systemName: "dollarsign.circle")
-                                    TextField(
-                                        "Nominal",
-                                        text: self.$nominals[nominalIndex]
-                                    ).keyboardType(.decimalPad)
-                                }
+                    HStack (
+                        alignment: .lastTextBaseline,
+                        content: {
+                            HStack {
+                                Image(systemName: "person")
+                                TextField(
+                                    "Person Name",
+                                    text: self.$friendsName[friendIndex]
+                                )
                             }
-                        )
+                            Spacer()
+                            HStack {
+                                Image(systemName: "dollarsign.circle")
+                                TextField(
+                                    "Nominal",
+                                    text: self.$nominals[nominalIndex]
+                                ).keyboardType(.decimalPad)
+                            }
+                        }
+                    )
                 }.onDelete{ indexSet in
                     for index in indexSet {
                         self.friendsName.remove(at: index)
@@ -163,7 +178,7 @@ struct FormAddActivityView: View {
                         HStack {
                             Text(category.title)
                             Image(systemName: category.icon)
-                        }.tag(category)
+                        }.tag(Optional(category))
                     }
                 }.pickerStyle(.menu)
             } header: {
@@ -231,7 +246,7 @@ struct FormAddActivityView: View {
                 if !isFound {
                     context.insert(
                         Summary(
-                            date: date, 
+                            date: date,
                             totalNominal: newSummaryItem.totalNominal,
                             summaries: [newSummaryItem]
                         )

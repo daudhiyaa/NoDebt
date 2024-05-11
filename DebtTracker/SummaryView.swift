@@ -34,28 +34,31 @@ struct SummaryView: View {
                             .fill(isCredit ? Color.teal : Color.gray)
                             .frame(height: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/)
                         VStack(alignment: .leading, content: {
-                            Text("Credit")
+                            Text("Piutang")
                                 .foregroundColor(.white)
-                                .font(.system(size: 12))
-                            Text("Nominal")
-                                .foregroundColor(.white)
+//                                .font(.system(size: 12))
+//                            Text("Nominal")
+//                                .foregroundColor(.white)
                         })
                     }.onTapGesture {
                         isCredit = true
+                        filterByIsCredit(summaries, by: isCredit)
                     }
+
                     ZStack {
                         RoundedRectangle(cornerRadius: 10)
                             .fill(isCredit ? Color.gray : Color.red.opacity(0.8))
                             .frame(height: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/)
                         VStack(alignment: .leading, content: {
-                            Text("Debit")
+                            Text("Hutang")
                                 .foregroundColor(.white)
-                                .font(.system(size: 12))
-                            Text("Nominal")
-                                .foregroundColor(.white)
+//                                .font(.system(size: 12))
+//                            Text("Nominal")
+//                                .foregroundColor(.white)
                         })
                     }.onTapGesture {
                         isCredit = false
+                        filterByIsCredit(summaries, by: isCredit)
                     }
                 })
                 
@@ -67,7 +70,7 @@ struct SummaryView: View {
                 }
                 .pickerStyle(.segmented)
                 .onChange(of: filterBy, { oldValue, newValue in
-                    filteredSummaries = filterSummaries(
+                    filteredSummaries = filterSummariesByDate(
                         summaries, by: filterBy
                     )
                 })
@@ -108,7 +111,7 @@ struct SummaryView: View {
         }
     }
     
-    func filterSummaries(_ summaries: [Summary], by filter: String) -> [Summary] {
+    func filterSummariesByDate(_ summaries: [Summary], by filter: String) -> [Summary] {
         let currentDate = Date()
         let calendar = Calendar.current
         
@@ -117,23 +120,32 @@ struct SummaryView: View {
             return summaries.filter { calendar.isDate($0.date, inSameDayAs: currentDate) }
         case "Week":
             let startOfWeek = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: currentDate))!
-            let endOfWeek = calendar.date(byAdding: .day, value: 7, to: startOfWeek)!
             return summaries.filter { calendar.isDate($0.date, equalTo: startOfWeek, toGranularity: .weekOfYear) }
         case "Month":
             let startOfMonth = calendar.date(from: calendar.dateComponents([.year, .month], from: currentDate))!
-            let endOfMonth = calendar.date(byAdding: DateComponents(month: 1, day: -1), to: startOfMonth)!
             return summaries.filter { calendar.isDate($0.date, equalTo: startOfMonth, toGranularity: .month) }
         case "Year":
             let startOfYear = calendar.date(from: calendar.dateComponents([.year], from: currentDate))!
-            let endOfYear = calendar.date(byAdding: DateComponents(year: 1, day: -1), to: startOfYear)!
             return summaries.filter { calendar.isDate($0.date, equalTo: startOfYear, toGranularity: .year) }
         default:
             return summaries.filter { calendar.isDate($0.date, inSameDayAs: currentDate) }
+        }
+    }
+    
+    func filterByIsCredit(_ summaries: [Summary], by filter: Bool) {
+        filteredSummaries = summaries.filter { summary in
+            for index in 0..<summary.summaries.count {
+                let item = summary.summaries[index]
+                if ((item.isCredit && filter) || (!item.isCredit && !filter)) {
+                    return true
+                }
+            }
+            return false
         }
     }
 }
 
 
 #Preview {
-    SummaryView()
+    SummaryView().modelContainer(for: [CategoryActivity.self, Summary.self])
 }

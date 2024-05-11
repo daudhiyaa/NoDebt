@@ -14,6 +14,6 @@ struct DebtTrackerApp: App {
         WindowGroup {
             SummaryView()
         }
-        .modelContainer(for: [CategoryActivity.self, Summary.self])
+        .modelContainer(for: [CategoryActivity.self, Summary.self, Person.self, SummaryItem.self])
     }
 }
