@@ -18,7 +18,14 @@ class SummaryItem: Identifiable {
     var isCredit: Bool
     var persons: [Person]
     
-    init(id: UUID = UUID(), activityName: String, category: CategoryActivity, totalNominal: Double, groupName: String, isCredit: Bool, persons: [Person]) {
+    init(
+        id: UUID = UUID(),
+        activityName: String,
+        category: CategoryActivity, 
+        totalNominal: Double,
+        groupName: String, isCredit: Bool,
+        persons: [Person]
+    ) {
         self.id = id
         self.activityName = activityName
         self.category = category

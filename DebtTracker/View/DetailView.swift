@@ -22,11 +22,9 @@ struct DetailView: View {
                 HStack(content: {
                     VStack(alignment: .leading,content: {
                         Text(summary.groupName)
-                            .foregroundColor(.black)
                             .font(.title3)
                             .fontWeight(.semibold)
                         Text("\(summary.activityName) - \(formatDate(date: date))")
-                            .foregroundColor(.black)
                             .font(.caption2)
                     })
                     Spacer()
@@ -37,24 +35,4 @@ struct DetailView: View {
             }
         }).navigationBarTitle("Detail", displayMode: .inline)
     }
-}
-
-#Preview {
-    DetailView(
-        summary: (
-            SummaryItem(
-                activityName: "Activity 1",
-                category: CategoryActivity(title: "Makan-makan", icon: "fork.knife.circle"),
-                totalNominal: 70000.0,
-                groupName: "Group 1",
-                isCredit: false,
-                persons: [
-                    Person(name: "Person 3", nominal: 30000.0, isPaid: false),
-                    Person(name: "Person 4", nominal: 40000.0, isPaid: true),
-                ]
-            )
-        ),
-        date: Date(),
-        isCredit: false
-    )
 }

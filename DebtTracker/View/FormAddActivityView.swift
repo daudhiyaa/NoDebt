@@ -16,7 +16,7 @@ struct FormAddActivityView: View {
     
     @Query private var summaries: [Summary]
     @Query private var categories: [CategoryActivity]
-    @State private var selectedCategoryActivity: CategoryActivity = CategoryActivity(title: "Kuliner", icon: "fork.knife.circle")
+    @State private var selectedCategoryActivity: CategoryActivity?
     
     @State private var isCredit = true
     
@@ -174,6 +174,7 @@ struct FormAddActivityView: View {
             
             Section {
                 Picker("Choose Category", selection: $selectedCategoryActivity) {
+                    Text("").tag(nil as CategoryActivity?)
                     ForEach(categories) { category in
                         HStack {
                             Text(category.title)
@@ -200,57 +201,54 @@ struct FormAddActivityView: View {
             }
             
             Button(action: {
-                var listOfPersons: [Person] = []
-                var totalNominal: Double = 0.0
-                
-                for (friend, nominal) in zip(friendsName, nominals) {
-                    listOfPersons.append(
-                        Person(
-                            name: friend,
-                            nominal: Double(nominal)!,
-                            isPaid: false
+                if activityName != "" || groupName != "" || friendsName != [""] || nominals != [""] {
+                    var listOfPersons: [Person] = []
+                    var totalNominal: Double = 0.0
+                    
+                    for (friend, nominal) in zip(friendsName, nominals) {
+                        listOfPersons.append(
+                            Person(
+                                name: friend,
+                                nominal: Double(nominal)!,
+                                isPaid: false
+                            )
                         )
+                        
+                        totalNominal += Double(nominal)!
+                    }
+                    
+                    totalNominal *= isCredit ? -1 : 1
+                    
+                    let newSummaryItem = SummaryItem(
+                        activityName: activityName,
+                        category: CategoryActivity(title: selectedCategoryActivity!.title, icon: selectedCategoryActivity!.icon),
+                        totalNominal: totalNominal,
+                        groupName: groupName,
+                        isCredit: isCredit,
+                        persons: listOfPersons
                     )
                     
-                    totalNominal += Double(nominal)!
-                }
-                
-                if !isCredit {
-                    totalNominal *= -1
-                }
-                
-                let newSummaryItem = SummaryItem(
-                    activityName: activityName,
-                    category: CategoryActivity(
-                        title: selectedCategoryActivity.title,
-                        icon: selectedCategoryActivity.icon
-                    ),
-                    totalNominal: totalNominal,
-                    groupName: groupName,
-                    isCredit: isCredit,
-                    persons: listOfPersons
-                )
-                
-                var isFound = false
-                for summary in summaries {
-                    if formatDate(date: date) == formatDate(date: summary.date) {
-                        summary.totalNominal += newSummaryItem.totalNominal
-                        summary.summaries.append(newSummaryItem)
-                        
-                        isFound = true
-                        try? context.save()
-                        break
+                    var isFound = false
+                    for summary in summaries {
+                        if formatDate(date: date) == formatDate(date: summary.date) {
+                            summary.totalNominal += newSummaryItem.totalNominal
+                            summary.summaries.append(newSummaryItem)
+                            
+                            isFound = true
+                            try? context.save()
+                            break
+                        }
                     }
-                }
-                
-                if !isFound {
-                    context.insert(
-                        Summary(
-                            date: date,
-                            totalNominal: newSummaryItem.totalNominal,
-                            summaries: [newSummaryItem]
+                    
+                    if !isFound {
+                        context.insert(
+                            Summary(
+                                date: date,
+                                totalNominal: newSummaryItem.totalNominal,
+                                summaries: [newSummaryItem]
+                            )
                         )
-                    )
+                    }
                 }
                 
                 isSheetPresented = false
@@ -272,8 +270,4 @@ struct FormAddActivityView: View {
             }.foregroundColor(.red)
         )
     }
-}
-
-#Preview {
-    FormAddActivityView(isSheetPresented: .constant(false))
 }

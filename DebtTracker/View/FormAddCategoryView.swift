@@ -29,7 +29,6 @@ struct FormAddCategoryActivityView: View {
     var body: some View {
         Form {
             TextField("Category Name", text: $categoryName).font(.body)
-                .textInputAutocapitalization(.never).disableAutocorrection(true)
             Picker("Choose Icon", selection: $categoryIcon) {
                 ForEach(categoriesIcon, id: \.self) { tag in
                     Image(systemName: tag).tag(tag)
@@ -40,7 +39,7 @@ struct FormAddCategoryActivityView: View {
                     insertCategoryActivity(title: categoryName, icon: categoryIcon)
                 }
             }, label: {
-                Text("Save").font(.subheadline)
+                Text("Save").font(.headline)
             })
             
             Section {
@@ -48,7 +47,7 @@ struct FormAddCategoryActivityView: View {
                     HStack {
                         Text(category.title)
                         Image(systemName: category.icon)
-                    }.foregroundStyle(.black)
+                    }
                 }
                 .onDelete{ indexSet in
                     for index in indexSet {

@@ -11,7 +11,7 @@ import SwiftData
 let filterTags: [String] = ["Day", "Week", "Month", "Year"]
 
 struct SummaryView: View {
-    @Query private var summaries: [Summary]
+    @Query(sort: \Summary.date) private var summaries: [Summary]
     
     @State private var filterBy: String = "Day"
     @State private var isSheetPresented = false
@@ -88,10 +88,10 @@ struct SummaryView: View {
                     } header: {
                         HStack{
                             Text("\(formatDate(date: summary.date))")
-                                .font(.body).foregroundStyle(.black)
+                                .font(.body)
                             Spacer()
                             Text(formatToIDR(summary.totalNominal))
-                                .textCase(.none).font(.body).foregroundStyle(.black)
+                                .textCase(.none).font(.body)
                         }
                     }
                 }
@@ -143,9 +143,4 @@ struct SummaryView: View {
             return false
         }
     }
-}
-
-
-#Preview {
-    SummaryView().modelContainer(for: [CategoryActivity.self, Summary.self])
 }

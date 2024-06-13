@@ -6,19 +6,10 @@
 //
 
 import Foundation
-import SwiftData
 
-@Model
-class Person: Identifiable {
+struct Person: Codable {
     var id = UUID()
     var name: String
     var nominal: Double
     var isPaid: Bool
-    
-    init(id: UUID = UUID(), name: String, nominal: Double, isPaid: Bool) {
-        self.id = id
-        self.name = name
-        self.nominal = nominal
-        self.isPaid = isPaid
-    }
 }
