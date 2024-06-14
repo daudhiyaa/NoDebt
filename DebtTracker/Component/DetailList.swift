@@ -12,7 +12,7 @@ struct DetailList: View {
     let isCredit: Bool
     
     var body: some View {
-        NavigationLink(destination: FormUploadPaymentView(person: person)) {
+        NavigationLink(destination: FormUploadPayment(person: person)) {
             HStack {
                 Image(systemName: "checkmark.circle")
                     .foregroundColor(person.isPaid ? Color.teal : Color.gray.opacity(0.5))

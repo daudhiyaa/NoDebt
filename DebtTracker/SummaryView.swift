@@ -104,7 +104,7 @@ struct SummaryView: View {
                     Image(systemName: "plus").foregroundColor(.teal)
                 }.popover(isPresented: $isSheetPresented) {
                     NavigationView {
-                        FormAddActivityView(isSheetPresented: $isSheetPresented)
+                        FormAddActivity(isSheetPresented: $isSheetPresented)
                     }
                 }
             )

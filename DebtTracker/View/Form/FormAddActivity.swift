@@ -8,14 +8,16 @@
 import SwiftUI
 import SwiftData
 
-struct FormAddActivityView: View {
+struct FormAddActivity: View {
     @Environment(\.modelContext) private var context
+    
+    @State private var viewModel = AddActivityViewModel()
     
     @Binding var isSheetPresented: Bool
     @State var isSheetAddCategoryActivityPresented: Bool = false
-    
-    @Query private var summaries: [Summary]
+
     @Query private var categories: [CategoryActivity]
+
     @State private var selectedCategoryActivity: CategoryActivity?
     
     @State private var isCredit = true
@@ -29,7 +31,6 @@ struct FormAddActivityView: View {
     
     @State private var selectedImage: UIImage?
     @State private var isImagePickerPresented = false
-    
     
     var body: some View {
         Form {
@@ -192,7 +193,7 @@ struct FormAddActivityView: View {
                         Image(systemName: "plus.circle").foregroundColor(.teal)
                     }.popover(isPresented: $isSheetAddCategoryActivityPresented) {
                         NavigationView {
-                            FormAddCategoryActivityView(
+                            FormAddCategory(
                                 isSheetAddCategoryActivityPresented: $isSheetAddCategoryActivityPresented
                             )
                         }
@@ -202,53 +203,15 @@ struct FormAddActivityView: View {
             
             Button(action: {
                 if activityName != "" || groupName != "" || friendsName != [""] || nominals != [""] {
-                    var listOfPersons: [Person] = []
-                    var totalNominal: Double = 0.0
-                    
-                    for (friend, nominal) in zip(friendsName, nominals) {
-                        listOfPersons.append(
-                            Person(
-                                name: friend,
-                                nominal: Double(nominal)!,
-                                isPaid: false
-                            )
-                        )
-                        
-                        totalNominal += Double(nominal)!
-                    }
-                    
-                    totalNominal *= isCredit ? -1 : 1
-                    
-                    let newSummaryItem = SummaryItem(
+                    viewModel.addActivity(
                         activityName: activityName,
-                        category: CategoryActivity(title: selectedCategoryActivity!.title, icon: selectedCategoryActivity!.icon),
-                        totalNominal: totalNominal,
+                        date: date,
                         groupName: groupName,
                         isCredit: isCredit,
-                        persons: listOfPersons
+                        category: selectedCategoryActivity,
+                        friendsName: friendsName,
+                        nominals: nominals
                     )
-                    
-                    var isFound = false
-                    for summary in summaries {
-                        if formatDate(date: date) == formatDate(date: summary.date) {
-                            summary.totalNominal += newSummaryItem.totalNominal
-                            summary.summaries.append(newSummaryItem)
-                            
-                            isFound = true
-                            try? context.save()
-                            break
-                        }
-                    }
-                    
-                    if !isFound {
-                        context.insert(
-                            Summary(
-                                date: date,
-                                totalNominal: newSummaryItem.totalNominal,
-                                summaries: [newSummaryItem]
-                            )
-                        )
-                    }
                 }
                 
                 isSheetPresented = false

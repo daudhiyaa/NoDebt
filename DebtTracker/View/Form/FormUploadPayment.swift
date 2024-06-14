@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct FormUploadPaymentView: View {
+struct FormUploadPayment: View {
     @State private var selectedImage: UIImage?
     @State private var isImagePickerPresented = false
     
@@ -70,14 +70,4 @@ struct FormUploadPaymentView: View {
             ImagePicker(selectedImage: self.$selectedImage)
         }
     }
-}
-
-#Preview {
-    FormUploadPaymentView(
-        person: Person(
-            name: "Person 5",
-            nominal: 30000.0,
-            isPaid: false
-        )
-    )
 }

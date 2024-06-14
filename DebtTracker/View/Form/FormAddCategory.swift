@@ -8,9 +8,11 @@
 import SwiftUI
 import SwiftData
 
-struct FormAddCategoryActivityView: View {
+struct FormAddCategory: View {
     @Environment(\.modelContext) private var context
     @Query private var categories: [CategoryActivity]
+    
+    @State private var viewModel = AddCategoryViewModel()
     
     @Binding var isSheetAddCategoryActivityPresented: Bool
     
@@ -36,8 +38,9 @@ struct FormAddCategoryActivityView: View {
             }.pickerStyle(.menu)
             Button (action: {
                 if(categoryName != "") {
-                    insertCategoryActivity(title: categoryName, icon: categoryIcon)
+                    viewModel.addCategory(title: categoryName, icon: categoryIcon)
                 }
+                isSheetAddCategoryActivityPresented = false
             }, label: {
                 Text("Save").font(.headline)
             })
@@ -63,16 +66,4 @@ struct FormAddCategoryActivityView: View {
             }.foregroundColor(.red)
         ).textCase(.none)
     }
-    
-    func insertCategoryActivity(title: String, icon: String) {
-        let category = CategoryActivity(
-            title: categoryName, icon: categoryIcon
-        )
-        context.insert(category)
-        isSheetAddCategoryActivityPresented = false
-    }
-}
-
-#Preview {
-    FormAddCategoryActivityView(isSheetAddCategoryActivityPresented: .constant(true))
 }
